@@ -1,0 +1,15 @@
+# Python
+*.pyc
+*.pyo
+__pycache__/
+*.swp
+
+# Virtualenv
+venv/
+env/
+
+# IDE (например, PyCharm)
+.idea/
+
+# Остальное
+.DS_Store  # для macOS
