@@ -3,7 +3,10 @@
 *.pyo
 __pycache__/
 *.swp
+<<<<<<< HEAD
 .idea/
+=======
+>>>>>>> 6071d4a66a1cd1478300d40129a17f8499dc9510
 
 # Virtualenv
 venv/
