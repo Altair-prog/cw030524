@@ -37,7 +37,7 @@ def main():
     executed_operations = filter_executed_operations(operations)
     sorted_operations = sort_operations_by_date(executed_operations)
 
-    # Вывод последних пяти операций
+    # Вывод последних пяти операций:
     for operation in sorted_operations[:5]:
         print(format_operation(operation))
 
