@@ -1,4 +1,5 @@
 import json
+from datetime import datetime
 
 # Функция для чтения данных из файла JSON
 def load_operations_from_json(file_path):
@@ -12,21 +13,32 @@ def filter_executed_operations(operations):
 
 # Функция для сортировки операций по дате
 def sort_operations_by_date(operations):
-    return sorted(operations, key=lambda x: x['date'], reverse=True)
+    return sorted(operations, key=lambda x: datetime.strptime(x['date'], '%Y-%m-%dT%H:%M:%S.%f'), reverse=True)
 
 # Функция для форматированного вывода операции
 def format_operation(operation):
     masked_from = mask_card_number(operation.get('from', ''))
     masked_to = mask_account_number(operation.get('to', ''))
-    return f"{operation['date']} {operation['description']}\n{masked_from} -> {masked_to}\n{operation['operationAmount']}\n"
+    formatted_date = datetime.strptime(operation['date'], '%Y-%m-%dT%H:%M:%S.%f').strftime('%d.%m.%Y')
+    return f"{formatted_date} {operation['description']}\n{masked_from} -> {masked_to}\n{operation['operationAmount']['amount']} {operation['operationAmount']['currency']['name']}\n"
 
 # Функция для маскирования номера карты
-def mask_card_number(card_number):
-    return f"{' '.join(card_number[:6])} XX** **** {' '.join(card_number[-4:])}" if card_number else ''
+def mask_card_number(card_info):
+    if card_info:
+        card_type, card_number = card_info.rsplit(' ', 1)
+        card_number = card_number.replace(' ', '')  # Удаление пробелов из номера карты
+        private_number = card_number[:6] + (len(card_number[6:-4]) * '*') + card_number[-4:]
+        masked_number = ' '.join([private_number[i:i+4] for i in range(0, len(private_number), 4)])
+        return f"{card_type} {masked_number}"
+    else:
+        return ''
 
 # Функция для маскирования номера счета
-def mask_account_number(account_number):
-    return f"**{account_number[-4:]}" if account_number else ''
+def mask_account_number(account_info):
+    if account_info:
+        return f"Счет **{account_info[-4:]}"
+    else:
+        return ''
 
 # Основная функция
 def main():
